@@ -1,6 +1,3 @@
-const btnList = document.querySelector(".Box-sc-1gh2r6s-0 .biGaqR");
-const editor = document.querySelector(".Box-sc-1gh2r6s-0 .gKSNvd");
-
 function gotoFullscreen() {
   const button = document.querySelector("#fullscreen-btn");
   if (document.fullscreenElement) {
@@ -14,6 +11,7 @@ function gotoFullscreen() {
 
 function gotoFullscreenInWindow() {
   const button = document.querySelector("#fullscreen-btn");
+  const editor = document.querySelector(".Box-sc-1gh2r6s-0 .gKSNvd");
   if(editor.classList.contains('fullscreen')) {
     button.innerHTML = "Zen";
     editor.classList.remove('fullscreen');
@@ -22,6 +20,7 @@ function gotoFullscreenInWindow() {
     editor.classList.add('fullscreen');
   }
 }
+
 function fullscreenChanged(event) {
   const button = document.querySelector("#fullscreen-btn");
   if (document.fullscreenElement) {
@@ -34,6 +33,7 @@ function fullscreenChanged(event) {
 }
 
 function addBtn() {
+  const btnList = document.querySelector(".Box-sc-1gh2r6s-0 .biGaqR");
   if (btnList != undefined) {
     let fullscreenBtn = document.createElement("div");
     fullscreenBtn.innerHTML = `<div class="Box-sc-1gh2r6s-0 kqWOGg" style="margin-left: 12px; margin-top: 1px">
@@ -45,10 +45,19 @@ function addBtn() {
     }
   }
 }
-function injectedFunction() {
-  document.body.style.backgroundColor = "orange";
-}
 
 // editor.addEventListener("fullscreenchange", fullscreenChanged)
+window.addEventListener('popstate', (ev) => {
+  console.log('route changed')
+  addBtn()
+})
 
 addBtn();
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+		switch (request.action){
+			case "github-tab-active":
+        console.log('message received')
+        addBtn()
+				return true;
+    }})
